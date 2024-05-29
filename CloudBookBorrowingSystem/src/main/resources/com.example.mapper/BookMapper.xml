@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.BookMapper">
+    <update id="editBook">
+        update book
+        <set>
+            <if test="book_name != null and book_name != ''">
+                book_name = #{book_name},
+            </if>
+            <if test="book_isbn != null and book_isbn !=''">
+                book_isbn = #{book_isbn},
+            </if>
+            <if test="book_press != null and book_press !=''">
+                book_press = #{book_press},
+            </if>
+            <if test="book_price != null">
+                book_price = #{book_price}
+            </if>
+            <if test="book_author != null and book_author !=''">
+                book_author = #{book_author},
+            </if>
+            <if test="book_pagination != null and book_pagination !=''">
+                book_pagination = #{book_pagination},
+            </if>
+
+            <if test="book_uploadtime != null and book_uploadtime !=''">
+                book_uploadtime = #{book_uploadtime},
+            </if>
+            <if test="book_status != null and book_status !=''">
+                book_status = #{book_status},
+            </if>
+            <if test="book_borrower != null and book_borrower !=''">
+                book_borrower = #{book_borrower},
+            </if>
+            <if test="book_borrowtime != null and book_borrowtime !=''">
+                book_borrowtime = #{book_borrowtime},
+            </if>
+            <if test="book_returntime != null and book_returntime !=''">
+                book_returntime = #{book_returntime},
+            </if>
+        </set>
+        where book_id = #{book_id}
+    </update>
+</mapper>
