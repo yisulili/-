@@ -25,6 +25,7 @@ public class Bookcontroller {
         System.out.println("分页查询" + pageNum +" " + pageSize);
         PageBean pageBean = bookService.page(pageNum,pageSize,book_status, book_name, book_author);
         return new Resp(200,"查询成功",pageBean);
+
     }
 
     /*
@@ -44,6 +45,7 @@ public class Bookcontroller {
         return new Resp(200,"修改成功",null);
     }
 
+
     /*查看书籍信息*/
     @GetMapping("/findById/{id}")
     public Resp getByID(@PathVariable Integer id){
@@ -52,7 +54,7 @@ public class Bookcontroller {
     }
 
     /*新添书籍*/
-    @PutMapping("/insert")
+    @PostMapping("/insert")
     public Resp insert(@RequestBody Book book){
         bookService.insetbook(book);
         return new Resp(200,"新增成功",null);

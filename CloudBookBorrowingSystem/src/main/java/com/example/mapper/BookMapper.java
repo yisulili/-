@@ -43,7 +43,7 @@ public interface BookMapper {
     * */
     void editBook(Book book);
 
-    @Insert("insert into book(book_name,book_isbn,book_press,book_author,book_pagination,book_price,book_uploadtime,book_status,) " +
+    @Insert("insert into book(book_name,book_isbn,book_press,book_author,book_pagination,book_price,book_uploadtime,book_status) " +
             "values (#{book_name},#{book_isbn},#{book_press},#{book_author},#{book_pagination},#{book_price},#{book_uploadtime},#{book_status})")
     void insert(Book book);
 }

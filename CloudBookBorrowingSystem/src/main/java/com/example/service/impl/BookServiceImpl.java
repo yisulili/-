@@ -54,6 +54,7 @@ public class BookServiceImpl implements BookService {
     public void insetbook(Book book) {
         book.setBook_status("0");
         book.setBook_uploadtime(String.valueOf(LocalDateTime.now()));
+        bookMapper.insert(book);
     }
 
     @Override
