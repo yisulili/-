@@ -3,9 +3,13 @@ package com.example.controller;
 import com.example.domain.Book;
 import com.example.domain.PageBean;
 import com.example.domain.Resp;
+import com.example.domain.User;
 import com.example.service.BookService;
 import jakarta.annotation.Resource;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class Bookcontroller {
@@ -59,5 +63,41 @@ public class Bookcontroller {
         bookService.insetbook(book);
         return new Resp(200,"新增成功",null);
     }
+
+    /*借阅书籍(面向用户)*/
+    @PostMapping("/borrowBook")
+    public Resp borroBook(@RequestBody Book book){
+        bookService.borrowBook(book);
+        return new Resp(200,"借阅成功,请按时归还",null);
+    }
+    /**/
+    @PostMapping("/selectMyborrow")
+    public Resp selectMyborrow(String book_borrower,String book_name, String book_author){
+        List<Book> books = bookService.selectMyborrow(book_borrower,book_name,book_author);
+        return new Resp(200,"查询成功",books);
+    }
+    @PostMapping("/selectMyborrowDesc")
+    public Resp selectMyborrowDesc(String book_borrower,String book_name, String book_author){
+        List<Book> books = bookService.selectMyborrow(book_borrower,book_name,book_author);
+        return new Resp(200,"查询成功",books);
+    }
+
+    @PostMapping("/selectMyborrowAsc")
+    public Resp selectMyborrowAsc(String book_borrower,String book_name, String book_author){
+        List<Book> books = bookService.selectMyborrow(book_borrower,book_name,book_author);
+        return new Resp(200,"查询成功",books);
+    }
+
+    @PostMapping("/returnBook")
+    public Resp returnBook(Integer id){
+        boolean b = bookService.returnBook(id);
+        return new Resp(200,"请等待管理员确认归还",b);
+    }
+    @PostMapping("/returnBookU")
+    public Resp returnBookU(Integer id){
+        boolean b = bookService.returnBookU(id);
+        return new Resp(200,"该书籍可借阅",b);
+    }
+
 
 }
