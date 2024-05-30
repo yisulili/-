@@ -12,6 +12,8 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@icon-park/vue-next": "^1.4.2",
+    "@mdui/icons": "^1.0.2",
     "axios": "^1.7.2",
     "mdui": "^2.1.1",
     "vue": "^3.4.21",

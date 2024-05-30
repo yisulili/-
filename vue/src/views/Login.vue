@@ -25,7 +25,7 @@ const aaa = () => {
 const show_message = () => {
   message_show.value.stutus = !message_show.value.stutus
 }
-const  Recharge = () => {
+const  Login = () => {
   message_show.value.stutus = false
   message_show.value.message = ""
   axios.post(
@@ -54,6 +54,36 @@ const  Recharge = () => {
 
 }
 
+const  register = () => {
+  message_show.value.stutus = false
+  message_show.value.message = ""
+  axios.post(
+      'api/register',
+      {
+        user_email:email.value,
+        user_password:password.value,
+        confirmPwd:password2
+      },
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+  ).then((ref_data)=>{
+    if(ref_data.data.code == 200){
+      message_show.value.message = ref_data.data.msg
+      start_switch()
+    }else {
+      if (ref_data.data.msg == null){
+        message_show.value.message = "登陆失败"
+      }
+      message_show.value.message = ref_data.data.msg
+    }
+    message_show.value.stutus = true
+  })
+
+}
+
 
 
 </script>
@@ -77,7 +107,7 @@ const  Recharge = () => {
                            :value="password2"
                            @input="password2 = $event.target.value"
                            label="请再次确认密码"></mdui-text-field>
-          <mdui-button @click="show_message()">注册</mdui-button>
+          <mdui-button @click="register()">注册</mdui-button>
         </form>
       </div>
       <div class="container-form container-signin">
@@ -91,7 +121,7 @@ const  Recharge = () => {
                            :value="password"
                            @input="password = $event.target.value"
                            label="密码"></mdui-text-field>
-          <mdui-button @click="Recharge()">登录</mdui-button>
+          <mdui-button @click="Login()">登录</mdui-button>
         </form>
       </div>
       <div class="container-overlay">
