@@ -39,7 +39,7 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public Resp login(User user, HttpServletRequest request,HttpSession session){
+    public Resp login(User user, HttpServletRequest request,HttpServletResponse response){
         try{
             User u = userService.login(user);
             if(u != null){
@@ -64,6 +64,8 @@ public class UserController {
                 String token = JWT.create().withClaim("user",claims)
                         .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60* 60*12L))
                         .sign(Algorithm.HMAC256("XIAOSU"));
+                response.setHeader("token",token);
+
                 return new Resp(200,"登录成功:", token);
             }
             return new Resp(401,"用户名或密码错误",null);
