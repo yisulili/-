@@ -26,10 +26,14 @@ public class UserServiceImpl implements UserService {
         if(userMapper.getUser(user) == null && user.getUser_password().equals(confirmPwd)) {
             user.setUser_status("0");
             user.setUser_role("user");
+            user.setUser_name(user.getUser_email());
             userMapper.insert(user);
             return true;
         }else return false;
     }
 
+    public User findUser(String user_email){
+        return userMapper.findUser(user_email);
+    }
 
 }

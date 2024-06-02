@@ -56,19 +56,30 @@ public interface BookMapper {
     /*查询当前借阅（面向用户）普通排序
     */
     @Select("select * from book where (#{book_name} is null or book_name like concat('%', #{book_name}, '%')) " +
+            "and book_borrower = #{book_borrower}" +
             "and (#{book_author} is null or book_author  like concat('%', #{book_author}, '%'))" +
             "and book_status in (1,2)")
     List<Book> selecMyborrow(String book_borrower,String book_name, String book_author);
     /*查询当前借阅（面向用户）降序
      */
     @Select("select * from book where (#{book_name} is null or book_name like concat('%', #{book_name}, '%')) " +
+            "and book_borrower = #{book_borrower}" +
             "and (#{book_author} is null or book_author  like concat('%', #{book_author}, '%'))" +
             "and book_status in (1,2) order by book_borrowtime desc")
     List<Book> selecMyborrowDesc(String book_borrower,String book_name, String book_author);
     /*查询当前借阅（面向用户）升序
      */
     @Select("select * from book where (#{book_name} is null or book_name like concat('%', #{book_name}, '%')) " +
+            "and book_borrower = #{book_borrower}" +
             "and (#{book_author} is null or book_author  like concat('%', #{book_author}, '%'))" +
             "and book_status in (1,2) order by book_borrowtime asc")
     List<Book> selecMyborrowAsc(String book_borrower,String book_name, String book_author);
+
+    /*当前借阅 （管理员）*/
+    @Select("select * from book where (#{book_name} is null or book_name like concat('%', #{book_name}, '%')) " +
+            "and (#{book_author} is null or book_author  like concat('%', #{book_author}, '%'))" +
+            "and (book_status in (1,2))" +
+            "and (#{book_borrower}  is null or book_borrower = #{book_borrower})")
+    List<Book> selectUserBorrow(@Param("pageNum")int pageNum, @Param("pageSize")int pageSize ,String book_borrower,String book_name, String book_author);
+
 }
