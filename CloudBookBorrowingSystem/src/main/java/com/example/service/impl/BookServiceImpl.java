@@ -2,10 +2,13 @@ package com.example.service.impl;
 
 import com.example.domain.Book;
 import com.example.domain.PageBean;
+import com.example.domain.Record;
 import com.example.domain.Resp;
 import com.example.domain.User;
 import com.example.mapper.BookMapper;
+import com.example.mapper.RecordMapper;
 import com.example.service.BookService;
+import com.example.service.RecordService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -25,12 +28,13 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     @Resource
     BookMapper bookMapper;
-
+    @Resource
+    RecordService recordService;
 
 //图书查询（面向用户）
     @Override
     public PageBean page(Integer pageNum, Integer pageSize, Integer book_status, String book_name, String book_author) {
-        //拿第一页，每页3条数据
+
         pageNum = (pageNum-1) * pageSize;
         List<Book> book_list = bookMapper.getBookByPage(pageNum,pageSize,book_name,book_author,book_status);
         PageInfo<Book> pageInfo = new PageInfo<Book>(book_list);
@@ -94,14 +98,38 @@ public class BookServiceImpl implements BookService {
         bookMapper.borrowBook(book);
         return true;
     }
-    public boolean returnBookU(int id){
+    /*确认归还*/
+    public Integer confirmReturnBook(int id){
         Book book = bookMapper.getByID(id);
+        Record record = new Record();
+
+        record.setRecord_bookname(book.getBook_name());
+        record.setRecord_borrower(book.getBook_borrower());
+        record.setRecord_borrowtime(book.getBook_borrowtime());
+        record.setRecord_bookisbn(book.getBook_isbn());
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        record.setRecord_remandtime(dateFormat.format(new Date()));
+        System.out.println(record);
+
         book.setBook_returntime(null);
         book.setBook_borrower(null);
         book.setBook_borrowtime(null);
         book.setBook_status("0");
-        bookMapper.borrowBook(book);
-        return true;
+        int count =  bookMapper.borrowBook(book);
+        if(count == 1){
+            return recordService.addRecord(record);
+        }
+        return 0;
+    }
+
+    @Override
+    public PageBean selectUserBorrow(Integer pageNum,Integer pageSize,String book_borrower, String book_name, String book_author) {
+        pageNum = (pageNum-1) * pageSize;
+        List<Book> book_list = bookMapper.selectUserBorrow(pageNum,pageSize,book_borrower,book_name,book_author);
+        PageInfo<Book> pageInfo = new PageInfo<Book>(book_list);
+        long total = pageInfo.getTotal();
+        System.out.println(total);
+        return new PageBean(total,pageInfo.getList());
     }
 
 }

@@ -12,6 +12,8 @@ public interface UserMapper {
             "user_password = #{user_password} and user_status != '1'")
     User getUser(User user);
 
+    @Select("select * from user where user_email = #{user_email}")
+    User findUser(String user_email);
 
 
     @Insert("insert into user(user_name, user_password, user_email,user_role,user_status) values (#{user_name},#{user_password},#{user_email},#{user_role},#{user_status})")

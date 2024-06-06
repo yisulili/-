@@ -72,7 +72,7 @@ const  register = () => {
       {
         user_email:email.value,
         user_password:password.value,
-        confirmPwd:password2
+        confirmPwd:password2.value
       },
       {
         headers: {

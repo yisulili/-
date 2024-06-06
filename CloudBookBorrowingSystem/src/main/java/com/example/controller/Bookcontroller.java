@@ -70,7 +70,7 @@ public class Bookcontroller {
         bookService.borrowBook(book);
         return new Resp(200,"借阅成功,请按时归还",null);
     }
-    /**/
+    /*当前借阅 （面向用户）*/
     @PostMapping("/selectMyborrow")
     public Resp selectMyborrow(String book_borrower,String book_name, String book_author){
         List<Book> books = bookService.selectMyborrow(book_borrower,book_name,book_author);
@@ -88,14 +88,25 @@ public class Bookcontroller {
         return new Resp(200,"查询成功",books);
     }
 
+    /*查询当前借阅 管理员的*/
+    @PostMapping("/selectUserBorrow")
+    public Resp selectUserBorrow(@RequestParam(defaultValue = "1") Integer pageNum, //开始的页数，
+                                 @RequestParam(defaultValue = "10") Integer pageSize,
+                                 String book_borrower,String book_name, String book_author){
+        PageBean books = bookService.selectUserBorrow(pageNum,pageSize ,book_borrower,book_name,book_author);
+        return new Resp(200,"查询成功",books);
+    }
+
+    /*用户的归还图书*/
     @PostMapping("/returnBook")
     public Resp returnBook(Integer id){
         boolean b = bookService.returnBook(id);
         return new Resp(200,"请等待管理员确认归还",b);
     }
-    @PostMapping("/returnBookU")
-    public Resp returnBookU(Integer id){
-        boolean b = bookService.returnBookU(id);
+    /*管理员的确认归还图书*/
+    @PostMapping("/confirmReturnBook")
+    public Resp confirmReturnBook(Integer id){
+        int b = bookService.confirmReturnBook(id);
         return new Resp(200,"该书籍可借阅",b);
     }
 
