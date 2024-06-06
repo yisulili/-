@@ -48,20 +48,22 @@
 
 import { computed, ref } from 'vue'
 import axios from "axios";
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InJvbGUiOiJ1c2VyIiwiaWQiOjIsImVtYWlsIjoiYWFhIn0sImV4cCI6MTcxNzY0MDcwN30.T0ZlfJjlFONwjdkxImgNJ62LYAXxmM32_vh6WxiGwbU"
+import router from "@/router";
+import {getTokenCookie} from "@/components/TokenService";
 const getBookData = () => {
   axios.get(
       "api/selectMyborrow",
       {
         headers:{
-          token:token
+          token:getTokenCookie()
         }
       }
   ).then((res) => {
     if (res.data.code == 200) {
       tableData.value = res.data.data.rows
     }else {
-      alert("图书数据获取失败")
+      alert("图书数据获取失败,或者未登录")
+      router.push("/")
     }
   })
 }

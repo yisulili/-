@@ -47,30 +47,33 @@
 <script lang="ts" setup>
 
 import { computed, ref } from 'vue'
-import axios from "axios";
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InJvbGUiOiJ1c2VyIiwiaWQiOjIsImVtYWlsIjoiYWFhIn0sImV4cCI6MTcxNzY0MDcwN30.T0ZlfJjlFONwjdkxImgNJ62LYAXxmM32_vh6WxiGwbU"
+import axios from "axios"
+
 const getBookData = () => {
   axios.get(
       "api/getPageBooks",
       {
         headers:{
-          token:token
+          token:getTokenCookie()
         }
       }
   ).then((res) => {
     if (res.data.code == 200) {
       tableData.value = res.data.data.rows
     }else {
-      alert("图书数据获取失败")
+      alert("图书数据获取失败,或者未登录")
+      router.push("/")
     }
   })
 }
 
 import { ElMessage, ElMessageBox } from 'element-plus'
+import {getTokenCookie} from "@/components/TokenService";
+import router from "@/router";
 
 const open = (book_data) => {
   const data_ = tableData.value.at(book_data)
-  ElMessageBox.prompt("是否要编辑 《"+data_.book_name+"》 ?", 'Tip', {
+  ElMessageBox.prompt("是否要编辑 《"+data_.book_name+"》 ?", '图书编辑', {
     confirmButtonText: 'OK',
     cancelButtonText: 'Cancel',
     inputPattern:

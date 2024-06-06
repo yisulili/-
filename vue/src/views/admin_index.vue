@@ -1,13 +1,12 @@
 <script setup>
-import {Home, Book, BookOpen, Search} from '@icon-park/vue-next';
+import {Home, Book, BookOpen, Search,Logout} from '@icon-park/vue-next';
 import {ref} from "vue";
-
-
-
 import { onBeforeUnmount, onMounted } from 'vue';
 import Tushujieyue from "@/components/tushujieyue.vue";
 import Dangqianjieyue from "@/components/dangqianjieyue.vue";
 import Jieyuejilu from "@/components/jieyuejilu.vue";
+import {setTokenCookie} from "@/components/TokenService.ts";
+import router from "@/router";
 
 // 设置页面背景颜色
 onMounted(() => {
@@ -29,6 +28,9 @@ const start_st = () => {
   show_stu.value = !show_stu.value
 }
 const select_st = (index) => {
+  if (index===5){
+    logout()
+  }
   select_stu.value = index
 }
 const get_show = ()=> {
@@ -38,9 +40,13 @@ const get_show = ()=> {
   return "navgation"
 }
 
-
+const logout = ()=>{
+  setTokenCookie("",0);
+  router.push("/")
+}
 
 const get_select = (index)=>{
+
   if (select_stu.value === index) {
     return "list active"
   }
@@ -80,6 +86,12 @@ const get_select = (index)=>{
           <a href="#" style="--clr:#f44336">
             <span class="icon"><Search theme="outline" size="24" fill="#333"/></span>
             <span class="text">借阅记录</span>
+          </a>
+        </li>
+        <li :class="get_select(5)" @click="select_st(5)">
+          <a href="#" style="--clr:#f44336">
+            <span class="icon"><Logout theme="outline" size="24" fill="#333"/></span>
+            <span class="text">退出登录</span>
           </a>
         </li>
       </ul>

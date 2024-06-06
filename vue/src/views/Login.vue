@@ -2,11 +2,19 @@
 import {ref} from "vue";
 import axios from "axios";
 import router from "@/router";
+import {setTokenCookie} from "@/components/TokenService";
 
 const email = ref("")
 const password = ref("")
 const password2 = ref("")
 const switch_stutus = ref(true)
+const v_url = ref("/api/generateImageCode")
+const v_code = ref("")
+
+const getCode = ()=> {
+  //点击刷新图形验证码
+  v_url.value += '?time='+ Date.now();
+}
 const message_show = ref({
   stutus: false,
   message: ""
@@ -32,23 +40,25 @@ const  Login = () => {
       'api/login',
       {
         user_email:email.value,
-        user_password:password.value
+        user_password:password.value,
+        code:v_code.value,
       },
       {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
       }
   ).then((ref_data)=>{
-      if(ref_data.data.code == 200){
-        message_show.value.message = ref_data.data.msg
-        router.push("/admin")
-      }else {
-        if (ref_data.data.msg == null){
-          message_show.value.message = "登陆失败"
-        }
-        message_show.value.message = ref_data.data.msg
+    if(ref_data.data.code == 200){
+      message_show.value.message = ref_data.data.msg
+      setTokenCookie(ref_data.headers.token,7)
+      router.push("/admin")
+    }else {
+      if (ref_data.data.msg == null){
+        message_show.value.message = "登陆失败"
       }
+      message_show.value.message = ref_data.data.msg
+    }
     message_show.value.stutus = true
   })
 
@@ -71,6 +81,7 @@ const  register = () => {
       }
   ).then((ref_data)=>{
     if(ref_data.data.code == 200){
+
       message_show.value.message = ref_data.data.msg
       start_switch()
     }else {
@@ -83,8 +94,6 @@ const  register = () => {
   })
 
 }
-
-
 
 </script>
 
@@ -119,8 +128,16 @@ const  register = () => {
                            label="账号/邮箱"></mdui-text-field>
           <mdui-text-field variant="outlined"
                            :value="password"
+                           type="password"
                            @input="password = $event.target.value"
                            label="密码"></mdui-text-field>
+          <div class="v_box">
+            <mdui-text-field variant="outlined" type="text"
+                             class="v_input"
+                             :value="v_code"
+                             @input="v_code = $event.target.value" label="验证码"></mdui-text-field>
+            <img class="v_img" :src="v_url" @click="getCode()" >
+          </div>
           <mdui-button @click="Login()">登录</mdui-button>
         </form>
       </div>
@@ -143,7 +160,21 @@ const  register = () => {
   margin: 0;
   padding: 0;
 }
-
+.v_box{
+  display: flex;
+  align-items: center;
+  height: 60px;
+  width: 100%;
+}
+.v_input{
+  flex: 1;
+  width: 70%;
+  margin-right: 1rem;
+}
+.v_img{
+  cursor: pointer;
+  width: 30%;
+}
 .page{
   position: absolute;
   height: 100%;
@@ -153,7 +184,6 @@ const  register = () => {
   background-size: cover;
   filter: blur(9px);
   display: flex;
-
 }
 .main{
   position: absolute;
@@ -173,7 +203,6 @@ const  register = () => {
   position: relative;
   width: 100%;
   margin: auto;
-
 }
 .container-form {
   height: 100%;
@@ -205,7 +234,7 @@ const  register = () => {
 .from *{
   margin: 1vw;
 }
-from-title {
+.from-title {
   font-weight: 300;
   margin: 0;
   margin-bottom: 1.25rem;
